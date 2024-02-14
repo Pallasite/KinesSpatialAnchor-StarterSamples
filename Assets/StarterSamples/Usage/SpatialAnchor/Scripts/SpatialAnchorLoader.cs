@@ -34,10 +34,17 @@ using UnityEngine;
 /// </remarks>
 public class SpatialAnchorLoader : MonoBehaviour
 {
+    KinesBoxesManager box_manager;
+
     [SerializeField]
     OVRSpatialAnchor _anchorPrefab;
 
     Action<OVRSpatialAnchor.UnboundAnchor, bool> _onLoadAnchor;
+
+    public void Start()
+    {
+        box_manager = this.GetComponent<KinesBoxesManager>();
+    }
 
     public void LoadAnchorsByUuid()
     {
@@ -113,6 +120,8 @@ public class SpatialAnchorLoader : MonoBehaviour
             // We just loaded it, so we know it exists in persistent storage.
             anchor.ShowSaveIcon = true;
         }
+
+        box_manager.IvokeUserHeight();
     }
 
     private static void Log(string message) => Debug.Log($"[SpatialAnchorsUnity]: {message}");

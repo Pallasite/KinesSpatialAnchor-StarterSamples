@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Home
   - CompletedTag
+  - RoomLight
+  - VisualTargets
   layers:
   - Default
   - TransparentFX
