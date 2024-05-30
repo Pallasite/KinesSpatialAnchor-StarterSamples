@@ -1,10 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
 public class KinesBoxesManager : MonoBehaviour
 {
-    GameObject[] visual_boxes;
+    public GameObject[] visual_boxes;
 
     [SerializeField]
     string find_tag = "VisualTargets";
@@ -12,10 +13,20 @@ public class KinesBoxesManager : MonoBehaviour
     int operator_a = 0;
     int operand = 1;
     int operator_b = 2;
+    [ContextMenu("User Height")]
 
     public void IvokeUserHeight()
     {
         Invoke(nameof(SetToUserHeight), 3f);
+    }
+
+    [ContextMenu("Save/Load Trials")]
+    public void SaveAndLoadTrials()
+    {
+        TextAsset stroop = Resources.Load<TextAsset>("_Data/stroop_problems");
+        //TextAsset math = Resources.Load("_Data/math_problems.csv") as TextAsset;
+        string path = Application.persistentDataPath + "/stroop_problems.csv";
+        File.WriteAllText(path, stroop.text);
     }
 
     void SetToUserHeight()
@@ -33,6 +44,7 @@ public class KinesBoxesManager : MonoBehaviour
     }
 
     // load a list of csv values from local application persistant data path file for three text mesh pro objects on the visual boxes
+    [ContextMenu("Load Stroop")]
     public void LoadCSVDataStroop()
     {
         string[] csv_data = System.IO.File.ReadAllLines(Application.persistentDataPath + "/stroop_problems.csv");
@@ -40,16 +52,17 @@ public class KinesBoxesManager : MonoBehaviour
         for (int i = 0; i < csv_data.Length; i++)
         {
             line_data = csv_data[i].Split(',');
-            visual_boxes[operator_a].GetComponentInChildren<TMPro.TextMeshPro>().text = line_data[0];
-            visual_boxes[operator_a].GetComponentInChildren<TMPro.TextMeshPro>().color = new Color(float.Parse(line_data[1]), float.Parse(line_data[2]), float.Parse(line_data[3]), 1);
-            visual_boxes[operand].GetComponentInChildren<TMPro.TextMeshPro>().text = line_data[4];
-            visual_boxes[operand].GetComponentInChildren<TMPro.TextMeshPro>().color = new Color(float.Parse(line_data[5]), float.Parse(line_data[6]), float.Parse(line_data[7]), 1);
-            visual_boxes[operator_b].GetComponentInChildren<TMPro.TextMeshPro>().text = line_data[8];
-            visual_boxes[operator_b].GetComponentInChildren<TMPro.TextMeshPro>().color = new Color(float.Parse(line_data[9]), float.Parse(line_data[10]), float.Parse(line_data[11]), 1);
+            visual_boxes[operator_a].GetComponentInChildren<TMPro.TextMeshProUGUI>().text = line_data[0];
+            visual_boxes[operator_a].GetComponentInChildren<TMPro.TextMeshProUGUI>().color = new Color(float.Parse(line_data[1]), float.Parse(line_data[2]), float.Parse(line_data[3]), 1);
+            visual_boxes[operand].GetComponentInChildren<TMPro.TextMeshProUGUI>().text = line_data[4];
+            visual_boxes[operand].GetComponentInChildren<TMPro.TextMeshProUGUI>().color = new Color(float.Parse(line_data[5]), float.Parse(line_data[6]), float.Parse(line_data[7]), 1);
+            visual_boxes[operator_b].GetComponentInChildren<TMPro.TextMeshProUGUI>().text = line_data[8];
+            visual_boxes[operator_b].GetComponentInChildren<TMPro.TextMeshProUGUI>().color = new Color(float.Parse(line_data[9]), float.Parse(line_data[10]), float.Parse(line_data[11]), 1);
         }
     }
 
     // load a list of numerical csv values from local application persistant data path file for three text mesh pro objects on the visual boxes
+    [ContextMenu("Load Math")]
     public void LoadCSVDataMath()
     {
         string[] csv_data = System.IO.File.ReadAllLines(Application.persistentDataPath + "/math_problems.csv");
@@ -57,9 +70,9 @@ public class KinesBoxesManager : MonoBehaviour
         for (int i = 0; i < csv_data.Length; i++)
         {
             line_data = csv_data[i].Split(',');
-            visual_boxes[operator_a].GetComponentInChildren<TMPro.TextMeshPro>().text = line_data[0];
-            visual_boxes[operand].GetComponentInChildren<TMPro.TextMeshPro>().text = line_data[1];
-            visual_boxes[operator_b].GetComponentInChildren<TMPro.TextMeshPro>().text = line_data[2];
+            visual_boxes[operator_a].GetComponentInChildren<TMPro.TextMeshProUGUI>().text = line_data[0];
+            visual_boxes[operand].GetComponentInChildren<TMPro.TextMeshProUGUI>().text = line_data[1];
+            visual_boxes[operator_b].GetComponentInChildren<TMPro.TextMeshProUGUI>().text = line_data[2];
         }
     }
 
@@ -71,9 +84,9 @@ public class KinesBoxesManager : MonoBehaviour
         for (int i = 0; i < csv_data.Length; i++)
         {
             line_data = csv_data[i].Split(',');
-            visual_boxes[operator_a].GetComponentInChildren<TMPro.TextMeshPro>().text = line_data[0];
-            visual_boxes[operand].GetComponentInChildren<TMPro.TextMeshPro>().text = line_data[1];
-            visual_boxes[operator_b].GetComponentInChildren<TMPro.TextMeshPro>().text = line_data[2];
+            visual_boxes[operator_a].GetComponentInChildren<TMPro.TextMeshProUGUI>().text = line_data[0];
+            visual_boxes[operand].GetComponentInChildren<TMPro.TextMeshProUGUI>().text = line_data[1];
+            visual_boxes[operator_b].GetComponentInChildren<TMPro.TextMeshProUGUI>().text = line_data[2];
         }
     }
 }
