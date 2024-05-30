@@ -2452,6 +2452,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 99685661574164056}
+    - targetCorrespondingSourceObject: {fileID: 8459964589269355297, guid: 6931d16d004d8054fae5f3f6e6ec0f6f,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5310377239713826218}
   m_SourcePrefab: {fileID: 100100000, guid: 6931d16d004d8054fae5f3f6e6ec0f6f, type: 3}
 --- !u!4 &8844771178949417656 stripped
 Transform:
@@ -2472,11 +2476,25 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8844771180342370120}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d0fef2814a7263d468e770b8fc369f99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  operand: 0
+--- !u!114 &5310377239713826218
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8844771180342370120}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c9d874fe3e81374f8dbd82c4fbb57fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  operand: 0
 --- !u!1001 &7409640652737639477
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2590,7 +2608,11 @@ PrefabInstance:
     - {fileID: 1023076332500350328, guid: 6931d16d004d8054fae5f3f6e6ec0f6f, type: 3}
     - {fileID: 6515479906687394711, guid: 6931d16d004d8054fae5f3f6e6ec0f6f, type: 3}
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8459964589269355297, guid: 6931d16d004d8054fae5f3f6e6ec0f6f,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7011136461470263205}
   m_SourcePrefab: {fileID: 100100000, guid: 6931d16d004d8054fae5f3f6e6ec0f6f, type: 3}
 --- !u!4 &1419619124555758308 stripped
 Transform:
@@ -2598,6 +2620,25 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 7409640652737639477}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1419619126383542036 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8459964589269355297, guid: 6931d16d004d8054fae5f3f6e6ec0f6f,
+    type: 3}
+  m_PrefabInstance: {fileID: 7409640652737639477}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &7011136461470263205
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1419619126383542036}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c9d874fe3e81374f8dbd82c4fbb57fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  operand: 0
 --- !u!1001 &8305474323518188544
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2716,6 +2757,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 7092080559040227611}
+    - targetCorrespondingSourceObject: {fileID: 8459964589269355297, guid: 6931d16d004d8054fae5f3f6e6ec0f6f,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3244490966968810790}
   m_SourcePrefab: {fileID: 100100000, guid: 6931d16d004d8054fae5f3f6e6ec0f6f, type: 3}
 --- !u!1 &442808637197739809 stripped
 GameObject:
@@ -2730,11 +2775,25 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 442808637197739809}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d0fef2814a7263d468e770b8fc369f99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  operand: 0
+--- !u!114 &3244490966968810790
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 442808637197739809}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c9d874fe3e81374f8dbd82c4fbb57fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  operand: 0
 --- !u!4 &442808639026799313 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8459964590561119953, guid: 6931d16d004d8054fae5f3f6e6ec0f6f,
