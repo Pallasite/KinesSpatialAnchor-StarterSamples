@@ -32,7 +32,32 @@ public class KinesBoxesManager : MonoBehaviour
 
     private void Update()
     {
-        
+        if(operand_a_box == null)
+        {
+            FindBoxes();
+        }
+
+    }
+
+    private void FindBoxes()
+    {
+        visual_boxes = GameObject.FindGameObjectsWithTag(find_tag);
+
+        foreach (GameObject box in visual_boxes)
+        {
+            if (box.name.Contains("Operand A"))
+            {
+                operand_a_box = box;
+            }
+            else if (box.name.Contains("Operand B"))
+            {
+                operand_b_box = box;
+            }
+            else if (box.name.Contains("Operator"))
+            {
+                operator_box = box;
+            }
+        }
     }
 
     public void StartTrials()
@@ -96,8 +121,6 @@ public class KinesBoxesManager : MonoBehaviour
     void SetToUserHeight()
     {
         Vector3 eye_level = GameObject.Find("CenterEyeAnchor").transform.position;
-
-        visual_boxes = GameObject.FindGameObjectsWithTag(find_tag);
 
         foreach (GameObject box in visual_boxes)
         {
