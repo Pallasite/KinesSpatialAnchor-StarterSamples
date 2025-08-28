@@ -1,51 +1,74 @@
-![Starter Samples Banner](./Documentation/Medias/banner.png "StarterSamples")
+# VR Kinesiology Cognitive Test
 
-# Unity Starter Samples
-The starter samples you will find here are to help you navigate and understand our APIs with more flexibility. We encourage you to look into them, test them out and inspire yourself on how the APIs can be used in your own project.
+This Unity project is a virtual reality application designed for conducting cognitive tests, specifically a Stroop test and a mathematical problem-solving test. The unique feature of this application is its reliance on user movement (kinesiology) to navigate between test trials.
 
-The [Oculus License](./LICENSE) applies to the samples.
+This project was built using **Unity 2022.3.51f1**.
 
-This project was built using the [Unity engine](https://unity.com/download).
+## Core Concepts
 
-## Getting The Code
-Clone this repo using the "Code" button above, or this command:
-```sh
-git clone https://github.com/oculus-samples/Unity-StarterSamples.git
+The application presents users with a series of trials displayed on virtual "boxes". The user's physical movement—walking forward or backward past a central point—triggers the transition to the next trial. This mechanic is central to the experimental design.
+
+### Cognitive Tests
+
+The application supports two types of cognitive tests, loaded from CSV files:
+
+1.  **Stroop Test:** A classic test of executive function where the user is presented with color words printed in conflicting colors (e.g., the word "Red" printed in blue).
+2.  **Math Test:** A test of mathematical reasoning where the user is presented with a simple arithmetic problem to solve.
+
+## Getting Started
+
+### Prerequisites
+
+*   Unity version **2022.3.51f1** or newer.
+*   An Oculus/Meta Quest VR headset and properly configured development environment.
+
+### Running the Project
+
+1.  Clone this repository to your local machine.
+2.  Open the project in the Unity Hub.
+3.  Once the project is open, locate the main scene file in the Project window: `Assets/_Scenes/SpatialAnchor Kineseology 3 08-21-25.unity`.
+4.  Open the scene and press the **Play** button to run the application in the editor or build it to your VR device.
+
+## Data Configuration
+
+The trials for the cognitive tests are loaded from CSV files. The application looks for these files in the `Application.persistentDataPath` directory.
+
+### `stroop_problems.csv`
+
+This file contains the data for the Stroop test. A sample file is included in `Assets/Resources/_Data/`. The application will copy this to the persistent data path on first run.
+
+**Format:** Each row represents one trial and should contain 12 comma-separated values. These values define the text and color for the three visual boxes (Operand A, Operator, Operand B).
+
+`text_a,r_a,g_a,b_a,text_op,r_op,g_op,b_op,text_b,r_b,g_b,b_b`
+
+*   `text_*`: The word to be displayed (e.g., "Red").
+*   `r,g,b`: The RGB color values for the text, from 0 to 1.
+
+**Example Row:**
+`Red,1,0,0,Blue,0,0,1,Green,0,1,0`
+
+### `math_problems.csv`
+
+This file contains the data for the math test. **This file is not included in the repository and you must create it yourself.**
+
+1.  Create a new file named `math_problems.csv`.
+2.  Add your trial data to this file.
+3.  Place the file in the `Application.persistentDataPath` directory for your target platform. You can find this path by adding `Debug.Log(Application.persistentDataPath);` to a script and running the application.
+
+**Format:** Each row represents one trial and should contain 3 comma-separated values.
+
+`operand_a,operator,operand_b`
+
+**Example Rows:**
+```
+10,+,5
+25,-,7
+8,*,4
 ```
 
-## How to run the project in Unity
-1. Make sure you're using  *Unity 2021.3.26f1* or newer.
-2. In the Project window, navigate to [Assets/StarterSamples/Usage](Assets/StarterSamples/Usage).
-3. Click on individual scenes.
-4. Click **Play** button to explore scene functionality in Unity.
+## Key Scripts
 
-## How to test on device
-1. Navigate to **Oculus** > **Samples** > **Build Starter Scene** to build an APK that will launch the **Starter Scene**.
-    <div style="margin-left: 4.5em;"><img src="./Documentation/Medias/buildsamples.png" width="300"></div>
-    * In this apk you will be able to cycle through the different sample scenes to test them out on device.
-2. Navigate to the `Unity-StarterSamples` folder and copy the `StartScene.apk` to your device using [Meta Quest Developer Hub](https://developer.oculus.com/documentation/unity/ts-odh-deploy-build/).
+*   `Assets/_Scripts/KinesBoxesManager.cs`: This is the main script that controls the application flow, loads trial data, and manages the user's state.
 
-## SDK Dependencies
-All Meta SDKs can be found in the [Unity Asset Store](https://assetstore.unity.com/publishers/25353).
-This project depends on SDKs defined in the [Packages/manifest.json](./Packages/manifest.json):
-* [Meta XR Core SDK](https://assetstore.unity.com/packages/tools/integration/meta-xr-core-sdk-269169)
-* [Meta XR Platform SDK](https://assetstore.unity.com/packages/tools/integration/meta-xr-platform-sdk-262366)
-
-## Integrate Samples to your own project
-1. Make sure your project uses the same SDK version
-2. Move the samples to your project
-   <details>
-      <summary><b>Copy Samples directory</b></summary>
-
-      + Copy [Assets/StarterSamples](./Assets/StarterSamples) directory to your own project
-    </details>
-    <details>
-      <summary><b>Create UnityPackage and Import it</b></summary>
-
-      1. Open Unity-StarterSamples project in Unity
-      2. Right-click on [Assets/StarterSamples](./Assets/StarterSamples) and select <i>Export Package...</i>
-      3. Save package in an easy location to retrieve
-      4. Open your own project (where you want the samples to be added)
-      5. Click on <i>Assets->Import Package->Custom Package...</i> from the menu bar
-      6. Find the package we saved in step 3 and click <i>Open</i>
-    </details>
+---
+*This README was generated by an AI assistant based on the project's source code.*
