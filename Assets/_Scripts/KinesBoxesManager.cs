@@ -11,6 +11,11 @@ public class KinesBoxesManager : MonoBehaviour
     public GameObject operand_b_box;
     public GameObject operator_box;
 
+    // Cached text components for better performance
+    private TMPro.TextMeshProUGUI operand_a_text;
+    private TMPro.TextMeshProUGUI operand_b_text;
+    private TMPro.TextMeshProUGUI operator_text;
+
     public GameObject user_camera;
 
     public float trial_advance_distance = 0.5f;
@@ -26,17 +31,33 @@ public class KinesBoxesManager : MonoBehaviour
     int stroop_index = 0;
     int math_index = 0;
 
-    bool has_advanced = false;
 
     public float height_set_timer = 5f;
 
+    // FSM states for user position relative to operator box
+    private enum UserZoneState
+    {
+        Unknown,
+        NegativeZone,
+        PositiveZone
+    }
+
+    private UserZoneState user_zone_state = UserZoneState.Unknown;
+
+    private void Start()
+    {
+        SetToUserHeight();
+        
+    }
+
     private void Update()
     {
-        if(operand_a_box == null)
+        if (operand_a_box == null)
         {
             FindBoxes();
+            LoadCSVDataMath();
+            StartTrials();
         }
-
     }
 
     private void FindBoxes()
@@ -48,14 +69,17 @@ public class KinesBoxesManager : MonoBehaviour
             if (box.name.Contains("Operand A"))
             {
                 operand_a_box = box;
+                operand_a_text = box.GetComponentInChildren<TMPro.TextMeshProUGUI>();
             }
             else if (box.name.Contains("Operand B"))
             {
                 operand_b_box = box;
+                operand_b_text = box.GetComponentInChildren<TMPro.TextMeshProUGUI>();
             }
             else if (box.name.Contains("Operator"))
             {
                 operator_box = box;
+                operator_text = box.GetComponentInChildren<TMPro.TextMeshProUGUI>();
             }
         }
     }
@@ -71,34 +95,43 @@ public class KinesBoxesManager : MonoBehaviour
     }
 
 
-    // Trial advance detection. When the user camera passes beyond 50 cm past the z position of the operator box, the trial advances  
+    // Trial advance detection using FSM
     void TrialAdvanceDetector()
     {
-        if (!has_advanced)
+        float user_z = user_camera.transform.position.z;
+        float operator_box_z = operator_box.transform.position.z;
+
+        // Determine if the user is facing z positive
+        //bool is_facing_positive_z = user_camera.transform.eulerAngles.y > 270 || user_camera.transform.eulerAngles.y < 90;
+        bool is_facing_positive_z = Vector3.Dot(user_camera.transform.forward, Vector3.forward) > 0;
+
+        switch (user_zone_state)
         {
-            // Determine if the user is facing z positive  
-            bool isFacingZPositive = user_camera.transform.eulerAngles.y > 270 || user_camera.transform.eulerAngles.y < 90;
+            case UserZoneState.Unknown:
+                // Initialize state based on current position
+                if (user_z > operator_box_z)
+                    user_zone_state = UserZoneState.PositiveZone;
+                else
+                    user_zone_state = UserZoneState.NegativeZone;
+                break;
 
-            //float direction = (user_camera.transform.position.z > operator_box.transform.position.z) ? -1 : 1;
+            case UserZoneState.NegativeZone:
+                if (is_facing_positive_z && user_z > operator_box_z + trial_advance_distance)
+                {
+                    // User entered positive zone from negative
+                    LoadNextMath();
+                    user_zone_state = UserZoneState.PositiveZone;
+                }
+                break;
 
-            if (isFacingZPositive)
-            {
-                if (user_camera.transform.position.z > operand_b_box.transform.position.z + trial_advance_distance)
+            case UserZoneState.PositiveZone:
+                if (!is_facing_positive_z && user_z < operator_box_z - trial_advance_distance)
                 {
-                    //LoadNextStroop();
+                    // User entered negative zone from positive
                     LoadNextMath();
-                    has_advanced = true;
+                    user_zone_state = UserZoneState.NegativeZone;
                 }
-            }
-            else if (user_camera.transform.eulerAngles.y > 90 && user_camera.transform.eulerAngles.y < 270)
-            {
-                if (user_camera.transform.position.z < operand_b_box.transform.position.z - trial_advance_distance)
-                {
-                    //LoadNextStroop();
-                    LoadNextMath();
-                    has_advanced = true;
-                }
-            }
+                break;
         }
     }
 
@@ -151,41 +184,36 @@ public class KinesBoxesManager : MonoBehaviour
     //we will have to consider swapping the boxes or changing the logic.
     public void LoadNextStroop()
     {
-        string[] line_data;
-
-        line_data = csv_trial_data[stroop_index].Split(',');
-
-        operand_a_box.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = line_data[0];
-        operand_a_box.GetComponentInChildren<TMPro.TextMeshProUGUI>().color = new Color(float.Parse(line_data[1]), float.Parse(line_data[2]), float.Parse(line_data[3]), 1);
-        operator_box.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = line_data[4];
-        operator_box.GetComponentInChildren<TMPro.TextMeshProUGUI>().color = new Color(float.Parse(line_data[5]), float.Parse(line_data[6]), float.Parse(line_data[7]), 1);
-        operand_b_box.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = line_data[8];
-        operand_b_box.GetComponentInChildren<TMPro.TextMeshProUGUI>().color = new Color(float.Parse(line_data[9]), float.Parse(line_data[10]), float.Parse(line_data[11]), 1);
-        
-        stroop_index++;
-
-        has_advanced = false;
+        if (stroop_index < csv_trial_data.Length)
+        {
+            SetStroopTrial(stroop_index);
+            stroop_index++;
+        }
+        else
+        {
+            Debug.LogWarning("End of stroop trials reached.");
+        }
     }
 
     public void LoadPreviousStroop()
     {
-        string[] line_data;
-
-        stroop_index -= 1;
-
+        stroop_index--;
         if (stroop_index < 0) stroop_index = 0;
+        
+        SetStroopTrial(stroop_index);
+        stroop_index++; // Increment so next LoadNext() works correctly
+    }
 
-        line_data = csv_trial_data[stroop_index].Split(',');
-        operand_a_box.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = line_data[0];
-        operand_a_box.GetComponentInChildren<TMPro.TextMeshProUGUI>().color = new Color(float.Parse(line_data[1]), float.Parse(line_data[2]), float.Parse(line_data[3]), 1);
-        operator_box.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = line_data[4];
-        operator_box.GetComponentInChildren<TMPro.TextMeshProUGUI>().color = new Color(float.Parse(line_data[5]), float.Parse(line_data[6]), float.Parse(line_data[7]), 1);
-        operand_b_box.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = line_data[8];
-        operand_b_box.GetComponentInChildren<TMPro.TextMeshProUGUI>().color = new Color(float.Parse(line_data[9]), float.Parse(line_data[10]), float.Parse(line_data[11]), 1);
-        stroop_index++;
+    private void SetStroopTrial(int index)
+    {
+        string[] line_data = csv_trial_data[index].Split(',');
 
-        has_advanced = false;
-
+        operand_a_text.text = line_data[0];
+        operand_a_text.color = new Color(float.Parse(line_data[1]), float.Parse(line_data[2]), float.Parse(line_data[3]), 1);
+        operator_text.text = line_data[4];
+        operator_text.color = new Color(float.Parse(line_data[5]), float.Parse(line_data[6]), float.Parse(line_data[7]), 1);
+        operand_b_text.text = line_data[8];
+        operand_b_text.color = new Color(float.Parse(line_data[9]), float.Parse(line_data[10]), float.Parse(line_data[11]), 1);
     }
 
     // load a list of numerical csv values from local application persistant data path file for three text mesh pro objects on the visual boxes
@@ -199,33 +227,31 @@ public class KinesBoxesManager : MonoBehaviour
 
     public void LoadNextMath()
     {
-        string[] line_data;
-
-        line_data = csv_trial_data[math_index].Split(',');
-        operand_a_box.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = line_data[0];
-        operator_box.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = line_data[1];
-        operand_b_box.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = line_data[2];
-
-        math_index++;
-        has_advanced = false;
-
+        if (math_index < csv_trial_data.Length)
+        {
+            SetMathTrial(math_index);
+            math_index++;
+        }
+        else
+        {
+            Debug.LogWarning("End of math trials reached.");
+        }
     }
 
     public void LoadPreviousMath()
     {
-        string[] line_data;
-
-        math_index -= 1;
-
+        math_index--;
         if (math_index < 0) math_index = 0;
+        
+        SetMathTrial(math_index);
+        math_index++; // Increment so next LoadNext() works correctly
+    }
 
-        line_data = csv_trial_data[math_index].Split(',');
-        operand_a_box.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = line_data[0];
-        operator_box.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = line_data[1];
-        operand_b_box.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = line_data[2];
-
-        math_index++;
-        has_advanced = false;
-
+    private void SetMathTrial(int index)
+    {
+        string[] line_data = csv_trial_data[index].Split(',');
+        operand_a_text.text = line_data[0];
+        operator_text.text = line_data[1];
+        operand_b_text.text = line_data[2];
     }
 }
