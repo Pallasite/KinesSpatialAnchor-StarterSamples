@@ -70,6 +70,9 @@ public class VRTrialControlPanel : MonoBehaviour
         {
             PositionPanel();
         }
+        
+        // Update status display periodically
+        InvokeRepeating(nameof(UpdateStatusDisplay), 1f, 2f);
     }
     
     private void Update()
@@ -99,6 +102,7 @@ public class VRTrialControlPanel : MonoBehaviour
     private void OnDestroy()
     {
         Application.logMessageReceived -= HandleLog;
+        CancelInvoke(nameof(UpdateStatusDisplay));
     }
     
     private void PositionPanel()
@@ -224,10 +228,21 @@ public class VRTrialControlPanel : MonoBehaviour
         status.AppendLine($"Manager Found: {(_kinesManager != null ? "Yes" : "No")}");
         status.AppendLine($"Time: {System.DateTime.Now:HH:mm:ss}");
         status.AppendLine("");
-        status.AppendLine("Use buttons below to control trials:");
+        
+        if (_kinesManager != null)
+        {
+            status.AppendLine("=== Trial Status ===");
+            status.AppendLine($"Trial Detection: {(_kinesManager.IsTrialRunning ? "RUNNING" : "STOPPED")}");
+            status.AppendLine($"Current Stroop: {_kinesManager.CurrentStroopIndex + 1} / {_kinesManager.TotalTrials}");
+            status.AppendLine($"Current Math: {_kinesManager.CurrentMathIndex + 1} / {_kinesManager.TotalTrials}");
+            status.AppendLine("");
+        }
+        
+        status.AppendLine("=== Controls ===");
         status.AppendLine("• Initialize: Setup system");
         status.AppendLine("• Start/Stop: Control trial detection");
         status.AppendLine("• Prev/Next: Manual trial navigation");
+        status.AppendLine("• Clear Logs: Reset log display");
         
         _statusText.text = status.ToString();
     }

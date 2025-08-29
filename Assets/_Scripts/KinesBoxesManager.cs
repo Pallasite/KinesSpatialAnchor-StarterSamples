@@ -31,6 +31,11 @@ public class KinesBoxesManager : MonoBehaviour
     int stroop_index = 0;
     int math_index = 0;
 
+    // Public properties for VR Control Panel integration
+    public int CurrentStroopIndex => stroop_index;
+    public int CurrentMathIndex => math_index;
+    public int TotalTrials => csv_trial_data?.Length ?? 0;
+    public bool IsTrialRunning => HasRepeatingInvoke(nameof(TrialAdvanceDetector));
 
     public float height_set_timer = 5f;
 
@@ -102,6 +107,10 @@ public class KinesBoxesManager : MonoBehaviour
         CancelInvoke(nameof(TrialAdvanceDetector));
     }
 
+    private bool HasRepeatingInvoke(string methodName)
+    {
+        return IsInvoking(methodName);
+    }
 
     // Trial advance detection using FSM
     void TrialAdvanceDetector()

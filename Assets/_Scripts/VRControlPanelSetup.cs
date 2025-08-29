@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Linq;
 
 /// <summary>
 /// Setup script to create and configure the VR Trial Control Panel in the scene.
@@ -51,6 +52,25 @@ public class VRControlPanelSetup : MonoBehaviour
         audioSource.volume = 0.5f;
         audioSource.playOnAwake = false;
         
+        // Try to load some button sounds from existing resources
+        AudioClip buttonSound = null;
+        try
+        {
+            // Use existing audio resources if available
+            buttonSound = Resources.Load<AudioClip>("Audio/Train_SteamBlast_A");
+            if (buttonSound == null)
+            {
+                // Try alternative path for button sounds
+                buttonSound = UnityEngine.Resources.FindObjectsOfTypeAll<AudioClip>()
+                    .Where(clip => clip.name.Contains("Steam") || clip.name.Contains("Whistle"))
+                    .FirstOrDefault();
+            }
+        }
+        catch (System.Exception)
+        {
+            // Audio loading failed, will work without sound
+        }
+        
         // Find or assign KinesBoxesManager
         KinesBoxesManager kinesManager = _kinesManagerOverride;
         if (_autoFindKinesManager && kinesManager == null)
@@ -67,17 +87,17 @@ public class VRControlPanelSetup : MonoBehaviour
         var buttonContainer = CreateButtonContainer(canvas.transform);
         
         // Create buttons
-        CreateButton(buttonContainer, "Initialize", new Vector2(-300, 200), panelScript.OnInitializePressed);
-        CreateButton(buttonContainer, "Start Trials", new Vector2(-100, 200), panelScript.OnStartTrialsPressed);
-        CreateButton(buttonContainer, "Stop Trials", new Vector2(100, 200), panelScript.OnStopTrialsPressed);
+        CreateButton(buttonContainer, "Initialize", new Vector2(-300, 200), panelScript.OnInitializePressed, buttonSound);
+        CreateButton(buttonContainer, "Start Trials", new Vector2(-100, 200), panelScript.OnStartTrialsPressed, buttonSound);
+        CreateButton(buttonContainer, "Stop Trials", new Vector2(100, 200), panelScript.OnStopTrialsPressed, buttonSound);
         
-        CreateButton(buttonContainer, "Prev Stroop", new Vector2(-300, 100), panelScript.OnPreviousStroopPressed);
-        CreateButton(buttonContainer, "Next Stroop", new Vector2(-100, 100), panelScript.OnNextStroopPressed);
+        CreateButton(buttonContainer, "Prev Stroop", new Vector2(-300, 100), panelScript.OnPreviousStroopPressed, buttonSound);
+        CreateButton(buttonContainer, "Next Stroop", new Vector2(-100, 100), panelScript.OnNextStroopPressed, buttonSound);
         
-        CreateButton(buttonContainer, "Prev Math", new Vector2(-300, 0), panelScript.OnPreviousMathPressed);
-        CreateButton(buttonContainer, "Next Math", new Vector2(-100, 0), panelScript.OnNextMathPressed);
+        CreateButton(buttonContainer, "Prev Math", new Vector2(-300, 0), panelScript.OnPreviousMathPressed, buttonSound);
+        CreateButton(buttonContainer, "Next Math", new Vector2(-100, 0), panelScript.OnNextMathPressed, buttonSound);
         
-        CreateButton(buttonContainer, "Clear Logs", new Vector2(100, 0), panelScript.ClearLogs);
+        CreateButton(buttonContainer, "Clear Logs", new Vector2(100, 0), panelScript.ClearLogs, buttonSound);
         
         // Configure the panel script with references
         SetPanelReferences(panelScript, statusText, logText, kinesManager);
@@ -184,7 +204,7 @@ public class VRControlPanelSetup : MonoBehaviour
         return containerGO.transform;
     }
     
-    private Button CreateButton(Transform parent, string buttonText, Vector2 position, System.Action onClick)
+    private Button CreateButton(Transform parent, string buttonText, Vector2 position, System.Action onClick, AudioClip buttonSound = null)
     {
         var buttonGO = new GameObject($"Button_{buttonText.Replace(" ", "")}");
         buttonGO.transform.SetParent(parent, false);
@@ -221,6 +241,30 @@ public class VRControlPanelSetup : MonoBehaviour
         // Add VR interaction capability
         var vrButton = buttonGO.AddComponent<VRButton>();
         vrButton.SetUIButton(button);
+        
+        // Configure audio feedback
+        if (buttonSound != null)
+        {
+            var buttonAudioSource = buttonGO.AddComponent<AudioSource>();
+            buttonAudioSource.clip = buttonSound;
+            buttonAudioSource.spatialBlend = 1.0f;
+            buttonAudioSource.volume = 0.3f;
+            buttonAudioSource.playOnAwake = false;
+            
+            // Set the audio source on VRButton using reflection
+            var vrButtonType = typeof(VRButton);
+            var audioSourceField = vrButtonType.GetField("_audioSource", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            if (audioSourceField != null)
+            {
+                audioSourceField.SetValue(vrButton, buttonAudioSource);
+            }
+            
+            var pressSoundField = vrButtonType.GetField("_pressSound", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            if (pressSoundField != null)
+            {
+                pressSoundField.SetValue(vrButton, buttonSound);
+            }
+        }
         
         // Add click listener
         if (onClick != null)
