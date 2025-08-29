@@ -55,9 +55,17 @@ public class KinesBoxesManager : MonoBehaviour
         if (operand_a_box == null)
         {
             FindBoxes();
-            LoadCSVDataMath();
-            StartTrials();
+            //LoadCSVDataMath();
+            //StartTrials();
         }
+    }
+
+    [ContextMenu("Initialize Test")]
+    public void Initialize()
+    {
+        FindBoxes();
+        LoadCSVDataMath();
+        StartTrials();
     }
 
     private void FindBoxes()
@@ -105,20 +113,29 @@ public class KinesBoxesManager : MonoBehaviour
         //bool is_facing_positive_z = user_camera.transform.eulerAngles.y > 270 || user_camera.transform.eulerAngles.y < 90;
         bool is_facing_positive_z = Vector3.Dot(user_camera.transform.forward, Vector3.forward) > 0;
 
+        Debug.Log($"[TrialAdvanceDetector] user_z: {user_z}, operator_box_z: {operator_box_z}, is_facing_positive_z: {is_facing_positive_z}, user_zone_state: {user_zone_state}");
+
         switch (user_zone_state)
         {
             case UserZoneState.Unknown:
                 // Initialize state based on current position
                 if (user_z > operator_box_z)
+                {
                     user_zone_state = UserZoneState.PositiveZone;
+                    Debug.Log("[TrialAdvanceDetector] Initialized to PositiveZone");
+                }
                 else
+                {
                     user_zone_state = UserZoneState.NegativeZone;
+                    Debug.Log("[TrialAdvanceDetector] Initialized to NegativeZone");
+                }
                 break;
 
             case UserZoneState.NegativeZone:
                 if (is_facing_positive_z && user_z > operator_box_z + trial_advance_distance)
                 {
                     // User entered positive zone from negative
+                    Debug.Log("[TrialAdvanceDetector] Transition: NegativeZone -> PositiveZone. Advancing trial.");
                     LoadNextMath();
                     user_zone_state = UserZoneState.PositiveZone;
                 }
@@ -128,6 +145,7 @@ public class KinesBoxesManager : MonoBehaviour
                 if (!is_facing_positive_z && user_z < operator_box_z - trial_advance_distance)
                 {
                     // User entered negative zone from positive
+                    Debug.Log("[TrialAdvanceDetector] Transition: PositiveZone -> NegativeZone. Advancing trial.");
                     LoadNextMath();
                     user_zone_state = UserZoneState.NegativeZone;
                 }
