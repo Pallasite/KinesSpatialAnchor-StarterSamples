@@ -46,7 +46,21 @@ namespace OculusSampleFramework
                 boxesManager = FindObjectOfType<KinesBoxesManager>();
             }
             
-            // Setup button listeners
+            // Setup VR navigation button listeners
+            var vrNavButtons = FindObjectsOfType<VRNavigationButton>();
+            foreach (var vrNavButton in vrNavButtons)
+            {
+                if (vrNavButton.gameObject.name.Contains("Previous"))
+                {
+                    vrNavButton.OnButtonPressed.AddListener(OnPreviousButtonClicked);
+                }
+                else if (vrNavButton.gameObject.name.Contains("Next"))
+                {
+                    vrNavButton.OnButtonPressed.AddListener(OnNextButtonClicked);
+                }
+            }
+            
+            // Setup regular button listeners (fallback)
             if (previousButton != null)
             {
                 previousButton.onClick.AddListener(OnPreviousButtonClicked);
@@ -202,6 +216,20 @@ namespace OculusSampleFramework
             if (showDebugLogs)
             {
                 Application.logMessageReceived -= HandleLogMessage;
+            }
+            
+            // Cleanup VR navigation button listeners
+            var vrNavButtons = FindObjectsOfType<VRNavigationButton>();
+            foreach (var vrNavButton in vrNavButtons)
+            {
+                if (vrNavButton.gameObject.name.Contains("Previous"))
+                {
+                    vrNavButton.OnButtonPressed.RemoveListener(OnPreviousButtonClicked);
+                }
+                else if (vrNavButton.gameObject.name.Contains("Next"))
+                {
+                    vrNavButton.OnButtonPressed.RemoveListener(OnNextButtonClicked);
+                }
             }
             
             if (previousButton != null)
