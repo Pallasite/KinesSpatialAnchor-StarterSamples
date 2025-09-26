@@ -191,7 +191,7 @@ GameObject:
   - component: {fileID: 5885979895381392699}
   m_Layer: 0
   m_Name: Visual
-  m_TagString: Untagged
+  m_TagString: SetupViz
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -572,7 +572,7 @@ GameObject:
   - component: {fileID: 6483375272625882049}
   m_Layer: 5
   m_Name: Canvas
-  m_TagString: Untagged
+  m_TagString: SetupViz
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2387,7 +2387,17 @@ PrefabInstance:
     - target: {fileID: 8459964589269355299, guid: 6931d16d004d8054fae5f3f6e6ec0f6f,
         type: 3}
       propertyPath: m_text
-      value: 9
+      value: '%'
+      objectReference: {fileID: 0}
+    - target: {fileID: 8459964589269355299, guid: 6931d16d004d8054fae5f3f6e6ec0f6f,
+        type: 3}
+      propertyPath: m_fontSize
+      value: 333
+      objectReference: {fileID: 0}
+    - target: {fileID: 8459964589269355299, guid: 6931d16d004d8054fae5f3f6e6ec0f6f,
+        type: 3}
+      propertyPath: m_fontSizeBase
+      value: 333
       objectReference: {fileID: 0}
     - target: {fileID: 8459964590561119952, guid: 6931d16d004d8054fae5f3f6e6ec0f6f,
         type: 3}
@@ -2511,7 +2521,17 @@ PrefabInstance:
     - target: {fileID: 8459964589269355299, guid: 6931d16d004d8054fae5f3f6e6ec0f6f,
         type: 3}
       propertyPath: m_text
-      value: +
+      value: '%'
+      objectReference: {fileID: 0}
+    - target: {fileID: 8459964589269355299, guid: 6931d16d004d8054fae5f3f6e6ec0f6f,
+        type: 3}
+      propertyPath: m_fontSize
+      value: 333
+      objectReference: {fileID: 0}
+    - target: {fileID: 8459964589269355299, guid: 6931d16d004d8054fae5f3f6e6ec0f6f,
+        type: 3}
+      propertyPath: m_fontSizeBase
+      value: 333
       objectReference: {fileID: 0}
     - target: {fileID: 8459964590561119952, guid: 6931d16d004d8054fae5f3f6e6ec0f6f,
         type: 3}
@@ -2637,7 +2657,17 @@ PrefabInstance:
     - target: {fileID: 8459964589269355299, guid: 6931d16d004d8054fae5f3f6e6ec0f6f,
         type: 3}
       propertyPath: m_text
-      value: 4
+      value: '%'
+      objectReference: {fileID: 0}
+    - target: {fileID: 8459964589269355299, guid: 6931d16d004d8054fae5f3f6e6ec0f6f,
+        type: 3}
+      propertyPath: m_fontSize
+      value: 333
+      objectReference: {fileID: 0}
+    - target: {fileID: 8459964589269355299, guid: 6931d16d004d8054fae5f3f6e6ec0f6f,
+        type: 3}
+      propertyPath: m_fontSizeBase
+      value: 333
       objectReference: {fileID: 0}
     - target: {fileID: 8459964590561119952, guid: 6931d16d004d8054fae5f3f6e6ec0f6f,
         type: 3}
