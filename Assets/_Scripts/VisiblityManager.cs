@@ -11,8 +11,25 @@ public class VisiblityManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        // Find all objects with the tag SetupViz and add them to the list
         objects_to_toggle = new List<GameObject>(GameObject.FindGameObjectsWithTag("SetupViz"));
+
+        InvokeRepeating("FindObjects", 1.0f, 1.0f);
+    }
+
+    public void FindObjects()
+    {
+        // Find all objects with the tag "SetupViz"
+        GameObject[] found_objects = GameObject.FindGameObjectsWithTag("SetupViz");
+
+        // Loop through each object that was found
+        foreach (GameObject obj in found_objects)
+        {
+            // If the list does NOT already contain the object, add it
+            if (!objects_to_toggle.Contains(obj))
+            {
+                objects_to_toggle.Add(obj);
+            }
+        }
     }
 
     // Update is called once per frame
