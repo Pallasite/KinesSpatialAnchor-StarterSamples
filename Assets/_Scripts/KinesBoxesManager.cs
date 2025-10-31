@@ -11,9 +11,13 @@ public class KinesBoxesManager : MonoBehaviour
     public GameObject operand_b_box;
     public GameObject operator_box;
 
+    public GameObject operand_c_box;
+
     // Cached text components for better performance
     private TMPro.TextMeshProUGUI operand_a_text;
     private TMPro.TextMeshProUGUI operand_b_text;
+    private TMPro.TextMeshProUGUI operand_c_text;
+
     private TMPro.TextMeshProUGUI operator_text;
 
     public GameObject user_camera;
@@ -89,6 +93,12 @@ public class KinesBoxesManager : MonoBehaviour
                 operator_box = box;
                 operator_text = box.GetComponentInChildren<TMPro.TextMeshProUGUI>();
             }
+            else if (box.name.Contains("Operand C"))
+            {
+                operand_c_box = box;
+                operand_c_text = box.GetComponentInChildren<TMPro.TextMeshProUGUI>();
+            }
+
         }
     }
 
@@ -271,5 +281,8 @@ public class KinesBoxesManager : MonoBehaviour
         operand_a_text.text = line_data[0];
         operator_text.text = line_data[1];
         operand_b_text.text = line_data[2];
+
+        // Set operand_c_text to a string composed of operand_a, operator, and operand_b separated by a space  
+        operand_c_text.text = $"{operand_a_text.text}{operator_text.text}{operand_b_text.text}";
     }
 }

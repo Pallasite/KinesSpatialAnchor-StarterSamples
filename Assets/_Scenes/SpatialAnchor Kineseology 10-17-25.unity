@@ -2430,7 +2430,7 @@ MonoBehaviour:
   - {fileID: 1115110214}
   - {fileID: 1034967287}
   - {fileID: 347484803}
-  _anchorPrefab: {fileID: 7834850231863383217, guid: f40bbc7ea78546a48871cd6f1e80527a,
+  _anchorPrefab: {fileID: 7834850231863383217, guid: 7fb08db70c177e740a60a2357ab819eb,
     type: 3}
   _placementPreview: {fileID: 894508003}
   _anchorPlacementTransform: {fileID: 942389912}
@@ -2479,6 +2479,7 @@ MonoBehaviour:
   operand_a_box: {fileID: 0}
   operand_b_box: {fileID: 0}
   operator_box: {fileID: 0}
+  operand_c_box: {fileID: 0}
   user_camera: {fileID: 978832058}
   trial_advance_distance: 2.4
   find_tag: VisualTargets
